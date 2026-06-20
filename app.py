@@ -116,7 +116,8 @@ if st.button("🚀 Build Tailored Study Material Package"):
             messages=[{"role": "user", "content": prompt_a}],
             max_completion_tokens=1024
         )
-        directives = completion_a.choices.message.content
+        # Fix applied here: Added [0] to extract from the list correctly
+        directives = completion_a.choices[0].message.content
         
         # ==========================================
         # 🤖 GENERATION LOOP WAVES
@@ -134,9 +135,10 @@ if st.button("🚀 Build Tailored Study Material Package"):
             completion_q = client.chat.completions.create(
                 model="llama-3.1-8b-instant",
                 messages=[{"role": "user", "content": prompt_q}],
-                max_completion_tokens=2048 # High token allowance prevents clipping
+                max_completion_tokens=2048
             )
-            all_questions.append(completion_q.choices.message.content.strip())
+            # Fix applied here: Added [0]
+            all_questions.append(completion_q.choices[0].message.content.strip())
             
             q_start += questions_per_loop
             progress_bar.progress(int((i / total_loops) * 50))
@@ -156,12 +158,13 @@ if st.button("🚀 Build Tailored Study Material Package"):
                 f"For each item number from {q_start} to {q_end}, state which option letter (A, B, C, or D) is accurate "
                 f"and write a thorough 2-sentence instructional note explaining the concept path clearly."
             )
-            completion_a = client.chat.completions.create(
+            completion_ans = client.chat.completions.create(
                 model="llama-3.1-8b-instant",
                 messages=[{"role": "user", "content": prompt_ans}],
-                max_completion_tokens=2048 # High token allowance prevents clipping
+                max_completion_tokens=2048
             )
-            all_answers.append(completion_a.choices.message.content.strip())
+            # Fix applied here: Added [0]
+            all_answers.append(completion_ans.choices[0].message.content.strip())
             
             q_start += questions_per_loop
             progress_bar.progress(int(50 + ((i / total_loops) * 50)))
