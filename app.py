@@ -68,8 +68,7 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# Initialize Secure Groq Cloud Connection utilizing Streamlit Secrets
-# This ensures your password key stays completely hidden from the user!
+# Initialize Secure Groq Cloud Connection
 try:
     client = Groq(api_key=st.secrets["GROQ_API_KEY"])
 except Exception:
@@ -114,9 +113,10 @@ if st.button("🚀 Build Tailored Study Material Package"):
         
         completion_a = client.chat.completions.create(
             model="llama-3.1-8b-instant",
-            messages=[{"role": "user", "content": prompt_a}]
+            messages=[{"role": "user", "content": prompt_a}],
+            max_completion_tokens=1024
         )
-        directives = completion_a.choices[0].message.content
+        directives = completion_a.choices.message.content
         
         # ==========================================
         # 🤖 GENERATION LOOP WAVES
@@ -133,9 +133,10 @@ if st.button("🚀 Build Tailored Study Material Package"):
             )
             completion_q = client.chat.completions.create(
                 model="llama-3.1-8b-instant",
-                messages=[{"role": "user", "content": prompt_q}]
+                messages=[{"role": "user", "content": prompt_q}],
+                max_completion_tokens=2048 # High token allowance prevents clipping
             )
-            all_questions.append(completion_q.choices[0].message.content.strip())
+            all_questions.append(completion_q.choices.message.content.strip())
             
             q_start += questions_per_loop
             progress_bar.progress(int((i / total_loops) * 50))
@@ -157,9 +158,10 @@ if st.button("🚀 Build Tailored Study Material Package"):
             )
             completion_a = client.chat.completions.create(
                 model="llama-3.1-8b-instant",
-                messages=[{"role": "user", "content": prompt_ans}]
+                messages=[{"role": "user", "content": prompt_ans}],
+                max_completion_tokens=2048 # High token allowance prevents clipping
             )
-            all_answers.append(completion_a.choices[0].message.content.strip())
+            all_answers.append(completion_a.choices.message.content.strip())
             
             q_start += questions_per_loop
             progress_bar.progress(int(50 + ((i / total_loops) * 50)))
