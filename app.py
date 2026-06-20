@@ -113,7 +113,7 @@ if st.button("🚀 Build Tailored Study Material Package"):
         prompt_a = f"Study the curriculum framework guidelines for {selected_class} {selected_subject}. Output a crisp checklist of format directives for the topic: {selected_chapter}."
         
         completion_a = client.chat.completions.create(
-            model="llama3-8b-8192",
+            model="llama-3.1-8b-instant",
             messages=[{"role": "user", "content": prompt_a}]
         )
         directives = completion_a.choices[0].message.content
@@ -132,7 +132,7 @@ if st.button("🚀 Build Tailored Study Material Package"):
                 f"Number them sequentially from {q_start} to {q_end}. Choices A, B, C, D on separate lines. Do not embed any answer lines."
             )
             completion_q = client.chat.completions.create(
-                model="llama3-8b-8192",
+                model="llama-3.1-8b-instant",
                 messages=[{"role": "user", "content": prompt_q}]
             )
             all_questions.append(completion_q.choices[0].message.content.strip())
@@ -156,7 +156,7 @@ if st.button("🚀 Build Tailored Study Material Package"):
                 f"and write a thorough 2-sentence instructional note explaining the concept path clearly."
             )
             completion_a = client.chat.completions.create(
-                model="llama3-8b-8192",
+                model="llama-3.1-8b-instant",
                 messages=[{"role": "user", "content": prompt_ans}]
             )
             all_answers.append(completion_a.choices[0].message.content.strip())
